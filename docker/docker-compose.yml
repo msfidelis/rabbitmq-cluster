@@ -32,7 +32,7 @@ services:
       - "15001:15672"
     volumes:
       - $PWD/.tmp/storage/rabbitmq02:/var/lib/rabbitmq
-      - $PWD/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      - $PWD/rabbitmq/entrypoint.sh:/usr/local/bin/entrypoint.sh
     entrypoint: /usr/local/bin/entrypoint.sh
     environment:
       - RABBITMQ_ERLANG_COOKIE=topdemais
@@ -51,7 +51,7 @@ services:
       - "15002:15672"
     volumes:
       - $PWD/.tmp/storage/rabbitmq03:/var/lib/rabbitmq
-      - $PWD/entrypoint.sh:/usr/local/bin/entrypoint.sh
+      - $PWD/rabbitmq/entrypoint.sh:/usr/local/bin/entrypoint.sh
     entrypoint: /usr/local/bin/entrypoint.sh
     environment:
       - RABBITMQ_ERLANG_COOKIE=topdemais
@@ -72,5 +72,5 @@ services:
       - "80:15672"
       - "5672:5672"
     volumes:
-      - $PWD/envoy.yaml:/etc/envoy/envoy.yaml
+      - $PWD/envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
