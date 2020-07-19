@@ -74,3 +74,17 @@ services:
     volumes:
       - $PWD/envoy/envoy.yaml:/etc/envoy/envoy.yaml
 
+
+# DEMO APPS
+
+  producer:
+    build:
+        context: ./producer
+        dockerfile: Dockerfile
+    environment:
+      - AMQP_URL=amqp://admin:EaeMankkkkk@envoy:5672
+    ports:
+        - 8080:8080
+    volumes:
+        - ./producer/:/go/src/producer
+
