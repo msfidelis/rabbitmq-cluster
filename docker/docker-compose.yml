@@ -88,3 +88,14 @@ services:
     volumes:
         - ./producer/:/go/src/producer
 
+
+  consumer:
+    build:
+        context: ./consumer
+        dockerfile: Dockerfile
+    environment:
+      - AMQP_URL=amqp://admin:EaeMankkkkk@envoy:5672
+    ports:
+        - 9090:8080
+    volumes:
+        - ./consumer/:/go/src/consumer

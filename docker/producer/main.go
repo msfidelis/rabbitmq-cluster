@@ -1,17 +1,18 @@
 package main
 
 import (
+	"encoding/json"
 	"log"
 	"os"
 	"time"
 
+	"github.com/bxcodec/faker/v3"
 	"github.com/streadway/amqp"
 )
 
-func failOnError(err error, msg string) {
-	if err != nil {
-		log.Fatalf("%s: %s", msg, err)
-	}
+type FakeRegister struct {
+	User string `faker:"username"`
+	Name string `faker:"first_name"`
 }
 
 func main() {
@@ -25,6 +26,7 @@ func main() {
 	defer connection.Close()
 
 	channel, err := connection.Channel()
+
 	if err != nil {
 		panic("Failed to open a channel to RabbitMQ:" + err.Error())
 	}
@@ -46,7 +48,14 @@ func main() {
 
 	for {
 
-		body := "Hello World!"
+		message := FakeRegister{}
+		err := faker.FakeData(&message)
+		body, err := json.Marshal(message)
+
+		if err != nil {
+			panic("Failed to parse faker data: " + err.Error())
+		}
+
 		err = channel.Publish(
 			"",         // exchannelange
 			queue.Name, // routing key
@@ -54,13 +63,13 @@ func main() {
 			false,      // immediate
 			amqp.Publishing{
 				ContentType: "text/plain",
-				Body:        []byte(body),
+				Body:        []byte(string(body)),
 			})
 
 		if err != nil {
 			panic("Failed to publish a message:" + err.Error())
 		} else {
-			log.Printf(" [x] Sent %s", body)
+			log.Printf("Send a message: %s", string(body))
 		}
 
 		time.Sleep(time.Second)
